@@ -1,5 +1,4 @@
-import {Component, OnInit} from '@angular/core';
-import {MatGridList, MatGridTile} from '@angular/material/grid-list';
+import {Component, inject, OnInit} from '@angular/core';
 import {
   MatCard,
   MatCardActions,
@@ -11,14 +10,15 @@ import {
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {Product, ProductService} from '../product.service';
-import {DecimalPipe} from '@angular/common';
+import {CurrencyPipe, NgOptimizedImage} from '@angular/common';
 import {MatButton} from '@angular/material/button';
+import {finalize} from 'rxjs';
+import {CartService} from '../cart.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-webshop',
   imports: [
-    MatGridList,
-    MatGridTile,
     MatCard,
     MatCardHeader,
     MatCardContent,
@@ -26,28 +26,49 @@ import {MatButton} from '@angular/material/button';
     MatCardTitle,
     MatIcon,
     MatProgressSpinner,
-    DecimalPipe,
     MatCardImage,
-    MatButton
+    MatButton,
+    NgOptimizedImage,
+    CurrencyPipe
   ],
   templateUrl: './webshop.component.html',
   styleUrl: './webshop.component.css'
 })
 export class WebshopComponent implements OnInit {
   products: Product[] = [];
+  isLoading = true;
 
-  constructor(private productService: ProductService) { }
+  private productService = inject(ProductService);
+  private cartService = inject(CartService);
+  private snackBar = inject(MatSnackBar);
 
   ngOnInit(): void {
-    this.productService.getProducts().subscribe({
-      next: (data) => this.products = data,
-      error: (err) => console.error('Error fetching products:', err)
-    });
+    this.productService.getProducts()
+      .pipe(
+        finalize(() => this.isLoading = false)
+      )
+      .subscribe({
+        next: (data) => this.products = data,
+        error: (err) => console.error('Error fetching products:', err)
+      });
   }
-
   buyProduct(product: Product): void {
-    // Implement your buy logic here
-    console.log('Buying product:', product);
+    this.cartService.addItem(product.id, 1).subscribe({
+      next: () => {
+        this.snackBar.open(`${product.name} added to cart!`, 'OK', {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+        });
+      },
+      error: (err) => {
+        this.snackBar.open('Could not add item to cart.', 'Close', {
+          duration: 3000,
+          panelClass: 'error-snackbar'
+        });
+        console.error('Error buying product:', err);
+      }
+    });
   }
 
 }

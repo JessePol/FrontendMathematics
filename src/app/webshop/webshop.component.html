@@ -1,34 +1,37 @@
-@if ( products.length > 0 ) {
-  <div class="product-grid">
-    <mat-grid-list cols="3" rowHeight="500px" gutterSize="20px">
-      @for (product of products; track product.id) {
-        <mat-grid-tile>
-          <mat-card class="product-card">
-            <mat-card-header>
-              <mat-card-title>{{ product.name }}</mat-card-title>
-            </mat-card-header>
-            <img mat-card-image [src]="product.imageUrl" [alt]="product.name + ' image'">
-            <mat-card-content>
-              <p class="price">${{ product.price | number:'1.2-2' }}</p>
-              <p>{{ product.description }}</p>
-            </mat-card-content>
-            <mat-card-actions align="end">
-              <button mat-raised-button color="primary" (click)="buyProduct(product)">
-                <mat-icon>shopping_cart</mat-icon>
-                BUY NOW
-              </button>
-            </mat-card-actions>
-          </mat-card>
-        </mat-grid-tile>
-      }
-    </mat-grid-list>
-  </div>
-
-} @else {
-
-  <div class="loading">
+@if (isLoading) {
+  <div class="status-container">
     <mat-spinner></mat-spinner>
-    Loading products...
+    <p>Loading products...</p>
   </div>
+} @else if (products.length > 0) {
+  <div class="product-grid">
+    @for (product of products; track product.id) {
+      <mat-card appearance="outlined" class="product-card">
+        <div class="product-image-container">
+          <img mat-card-image [ngSrc]="'book-image.png'" [alt]="product.name + ' image'" width="300" height="300" priority>
+        </div>
 
+        <mat-card-header>
+          <mat-card-title>{{ product.name }}</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content class="product-card-content">
+          <p class="price">{{ product.price | currency:'USD' }}</p>
+          <p class="description">{{ product.description }}</p>
+        </mat-card-content>
+
+        <mat-card-actions class="product-card-actions">
+          <button mat-raised-button color="primary" (click)="buyProduct(product)">
+            <mat-icon>shopping_cart</mat-icon>
+            BUY NOW
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    }
+  </div>
+} @else {
+  <div class="status-container">
+    <mat-icon>info</mat-icon>
+    <p>No products found.</p>
+  </div>
 }

@@ -1,4 +1,4 @@
-<mat-toolbar color="primary">
+<mat-toolbar>
   <div class="header-content">
     <!-- Left side -->
     <div class="left-section">
@@ -13,9 +13,71 @@
       </nav>
     </div>
 
-    <!-- Right section placeholder -->
+    <!-- Right section -->
     <div class="right-section">
-      <div class="profile-placeholder">User Profile</div>
+
+      @if (currentUser$ | async; as user) {
+
+        <button mat-icon-button
+                aria-label="Open shopping cart"
+                title="Shopping cart"
+                [matMenuTriggerFor]="cartMenu">
+          <mat-icon [matBadge]="cartService.totalItems()"
+                    [matBadgeHidden]="cartService.totalItems() === 0"
+                    matBadgeColor="warn">
+            shopping_cart
+          </mat-icon>
+        </button>
+
+        <button mat-button (click)="logout()" aria-label="Logout" title="Logout">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      } @else {
+        <button mat-icon-button disabled aria-label="Login to view shopping cart" title="Login to view shopping cart">
+          <mat-icon>shopping_cart</mat-icon>
+        </button>
+
+        <button mat-flat-button color="primary" (click)="openLoginBox()">
+          <mat-icon>login</mat-icon>
+          <span>Login</span>
+        </button>
+      }
+
     </div>
   </div>
 </mat-toolbar>
+
+<!-- Shopping Cart Dropdown Menu -->
+<mat-menu #cartMenu="matMenu" class="cart-menu">
+  <div class="cart-menu-header">
+    <h3>Your Cart</h3>
+  </div>
+  <mat-divider></mat-divider>
+
+  @if (cartService.totalItems() > 0) {
+    <div class="cart-items-container">
+      @for (item of cartService.cartItems(); track item.productId) {
+        <div class="cart-item">
+          <span class="item-name">{{ item.productName }}</span>
+          <span class="item-details">
+            {{ item.quantity }} x {{ item.unitPrice | currency:'EUR' }}
+          </span>
+          <span class="item-total">{{ item.itemTotal | currency:'EUR' }}</span>
+        </div>
+      }
+    </div>
+    <mat-divider></mat-divider>
+    <div class="cart-total">
+      <strong>Total:</strong>
+      <strong>{{ cartService.totalPrice() | currency:'EUR' }}</strong>
+    </div>
+    <div class="cart-actions">
+      <button mat-flat-button color="primary">Go to Checkout</button>
+    </div>
+  } @else {
+    <div class="empty-cart-message">
+      <p>Your cart is empty.</p>
+    </div>
+  }
+</mat-menu>
