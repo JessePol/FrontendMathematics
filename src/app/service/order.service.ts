@@ -53,4 +53,13 @@ export class OrderService {
       })
     );
   }
+
+  getOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.baseUrl}/orders`).pipe(
+      catchError(err => {
+        console.error('Failed to fetch orders', err);
+        return throwError(() => new Error('Could not retrieve your orders.'));
+      })
+    );
+  }
 }
