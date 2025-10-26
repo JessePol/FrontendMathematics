@@ -9,6 +9,11 @@
     <div class="middle-section">
       <nav>
         <a mat-button routerLink="/webshop" routerLinkActive="active-link">Webshop</a>
+        @if (authService.currentUser()) {
+          <a mat-button routerLink="/orders" routerLinkActive="active-link">My Orders</a>
+        } @else {
+          <a mat-button disabled title="Login to view your orders">My Orders</a>
+        }
         <a mat-button routerLink="/about" routerLinkActive="active-link">About</a>
       </nav>
     </div>

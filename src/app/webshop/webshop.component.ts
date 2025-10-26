@@ -4,7 +4,7 @@ import {
   MatCardActions,
   MatCardContent,
   MatCardHeader,
-  MatCardImage,
+  MatCardImage, MatCardSubtitle,
   MatCardTitle
 } from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
@@ -15,6 +15,7 @@ import {MatButton} from '@angular/material/button';
 import {finalize} from 'rxjs';
 import {CartService} from '../service/cart.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatDivider} from '@angular/material/divider';
 
 @Component({
   selector: 'app-webshop',
@@ -22,14 +23,16 @@ import {MatSnackBar} from '@angular/material/snack-bar';
     MatCard,
     MatCardHeader,
     MatCardContent,
-    MatCardActions,
     MatCardTitle,
     MatIcon,
     MatProgressSpinner,
-    MatCardImage,
     MatButton,
     NgOptimizedImage,
-    CurrencyPipe
+    CurrencyPipe,
+    MatDivider,
+    MatCardSubtitle,
+    MatCardActions,
+    MatCardImage,
   ],
   templateUrl: './webshop.component.html',
   styleUrl: './webshop.component.css'
