@@ -1,0 +1,60 @@
+
+<h1 mat-dialog-title>{{ isEditMode ? 'Edit Product' : 'Add New Product' }}</h1>
+
+<div mat-dialog-content>
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill">
+      <mat-label>Product Name</mat-label>
+      <input matInput formControlName="name" required>
+      @if (productForm.get('name')?.hasError('required')) {
+        <mat-error>Name is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Image URL</mat-label>
+      <input matInput formControlName="imageUrl" required>
+      @if (productForm.get('imageUrl')?.hasError('required')) {
+        <mat-error>Image URL is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" required rows="4"></textarea>
+      @if (productForm.get('description')?.hasError('required')) {
+        <mat-error>Description is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Price</mat-label>
+      <input matInput formControlName="price" type="number" required min="0.01">
+      @if (productForm.get('price')?.hasError('required')) {
+        <mat-error>Price is required</mat-error>
+      }
+      @if (productForm.get('price')?.hasError('min')) {
+        <mat-error>Price must be positive</mat-error>
+      }
+    </mat-form-field>
+  </form>
+
+  @if (errorMessage) {
+    <p class="error-message">{{ errorMessage }}</p>
+  }
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="isLoading">Cancel</button>
+  <button mat-raised-button
+          color="primary"
+          [disabled]="productForm.invalid || isLoading"
+          (click)="onSubmit()">
+    @if (isLoading) {
+      <mat-spinner diameter="24"></mat-spinner>
+    } @else {
+      <span>{{ isEditMode ? 'Update Product' : 'Save Product' }}</span>
+    }
+  </button>
+</div>
+

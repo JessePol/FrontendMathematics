@@ -1,0 +1,66 @@
+<div class="orders-container">
+  <mat-card class="orders-card">
+    <mat-card-header>
+      <mat-card-title>Your Order History</mat-card-title>
+      <mat-card-subtitle>A record of your 'Pataphysical acquisitions.</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+
+    <mat-card-content>
+      @if (isLoading()) {
+        <div class="status-container">
+          <mat-spinner></mat-spinner>
+          <p>Loading your orders...</p>
+        </div>
+      } @else if (error()) {
+        <div class="status-container error">
+          <mat-icon>error</mat-icon>
+          <p>Sorry, we couldn't load your orders.</p>
+          <p class="error-details">{{ error() }}</p>
+        </div>
+      } @else if (orders().length > 0) {
+        <mat-accordion>
+          @for (order of orders(); track order.id) {
+            <mat-expansion-panel class="order-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Order #{{ order.id }}
+                </mat-panel-title>
+                <mat-panel-description>
+                  <span>{{ order.orderDate | date:'mediumDate' }}</span>
+                  <strong>{{ order.totalPrice | currency:'EUR' }}</strong>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+
+
+              <mat-list>
+                @for (item of order.orderItems; track item.id) {
+                  <mat-list-item>
+                    <span matListItemTitle>{{ item.productName }}</span>
+
+                    <div matListItemLine class="order-item-details-line">
+                      <span>{{ item.quantity }} x {{ item.priceAtPurchase | currency:'EUR' }}</span>
+                      <span class="item-line-total">{{ item.totalPrice | currency:'EUR' }}</span>
+                    </div>
+                  </mat-list-item>
+                }
+              </mat-list>
+
+
+
+
+
+            </mat-expansion-panel>
+          }
+        </mat-accordion>
+      } @else {
+        <div class="status-container">
+          <mat-icon>info_outline</mat-icon>
+          <p>You have not placed any orders yet.</p>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

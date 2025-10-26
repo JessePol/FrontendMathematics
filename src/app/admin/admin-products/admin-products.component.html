@@ -1,0 +1,53 @@
+@if (isLoading) {
+  <div class="status-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading products...</p>
+  </div>
+} @else {
+  <div class="shop-container">
+    <mat-card class="shop-header-card" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Product Management</mat-card-title>
+        <mat-card-subtitle>Add, edit, or remove products from the catalogue.</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+
+    <div class="product-grid">
+      <mat-card appearance="outlined" class="product-card add-product-card" (click)="openAddProductDialog()">
+        <mat-icon>add_circle_outline</mat-icon>
+        <span>Add New Product</span>
+      </mat-card>
+
+      @for (product of products; track product.id) {
+        <mat-card appearance="outlined" class="product-card">
+          <div class="product-image-container">
+            <img mat-card-image [ngSrc]="'book-image.png'" [alt]="product.name + ' image'" width="300" height="300" priority>
+          </div>
+          <mat-card-header>
+            <mat-card-title>{{ product.name }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="product-card-content">
+            <p class="price">{{ product.price | currency:'EUR' }}</p>
+            <p class="description">{{ product.description }}</p>
+          </mat-card-content>
+          <mat-divider></mat-divider>
+          <mat-card-actions align="end">
+            <button mat-icon-button color="primary" title="Edit Product" (click)="openEditProductDialog(product)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" title="Delete Product" (click)="confirmDeleteProduct(product)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+
+    @if (products.length === 0) {
+      <div class="status-container">
+        <mat-icon>info</mat-icon>
+        <p>No products found. Click the '+' card to add one!</p>
+      </div>
+    }
+  </div>
+}
