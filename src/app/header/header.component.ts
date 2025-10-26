@@ -6,7 +6,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {AuthService} from '../auth.service';
 import {LoginBoxComponent} from '../components/login-box/login-box.component';
 import {MatIcon} from '@angular/material/icon';
-import {AsyncPipe, CurrencyPipe} from '@angular/common';
+import {CurrencyPipe} from '@angular/common';
 import {MatMenu, MatMenuTrigger} from '@angular/material/menu';
 import {MatBadge} from '@angular/material/badge';
 import {MatDivider} from '@angular/material/divider';
@@ -22,7 +22,6 @@ import {CartService} from '../cart.service';
     MatIcon,
     MatIconButton,
     MatButton,
-    AsyncPipe,
     MatMenu,
     MatMenuTrigger,
     MatBadge,
@@ -33,15 +32,12 @@ import {CartService} from '../cart.service';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  private authService = inject(AuthService);
+  public authService = inject(AuthService);
   public cartService = inject(CartService);
   private dialog = inject(MatDialog);
 
-  currentUser$ = this.authService.currentUser$;
-
   logout(): void {
     this.authService.logout();
-    this.cartService.clearCart();
   }
 
   openLoginBox(): void {

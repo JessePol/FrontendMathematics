@@ -16,7 +16,7 @@
     <!-- Right section -->
     <div class="right-section">
 
-      @if (currentUser$ | async; as user) {
+      @if (authService.currentUser(); as user) {
 
         <button mat-icon-button
                 aria-label="Open shopping cart"

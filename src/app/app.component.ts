@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, effect, inject} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {HeaderComponent} from './header/header.component';
 import {AuthService} from './auth.service';
@@ -10,17 +10,21 @@ import {CartService} from './cart.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   private authService = inject(AuthService);
   private cartService = inject(CartService);
 
   title = 'FrontendMathematicsInc';
 
-  ngOnInit(): void {
-    this.authService.currentUser$.subscribe(user => {
+  constructor() {
+    effect(() => {
+      const user = this.authService.currentUser();
+
       if (user) {
+        console.log('User logged in, fetching cart...');
         this.cartService.getCart().subscribe();
       } else {
+        console.log('User logged out, clearing cart...');
         this.cartService.clearCart();
       }
     });

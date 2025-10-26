@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Injectable, Signal, signal} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {Observable, BehaviorSubject, switchMap} from 'rxjs';
+import {Observable, switchMap} from 'rxjs';
 import { tap } from 'rxjs/operators';
 import {environment} from '../environments/environment';
 
@@ -26,8 +26,8 @@ export interface RegisterResponse {
 export class AuthService {
   private readonly baseUrl = environment.apiUrl;
 
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
+  private currentUserState = signal<User | null>(null);
+  public currentUser: Signal<User | null> = this.currentUserState.asReadonly();
 
   constructor(private http: HttpClient) {
     this.loadInitialUser();
@@ -39,7 +39,7 @@ export class AuthService {
       const username = localStorage.getItem('username');
       const role = localStorage.getItem('role');
       if (username && role) {
-        this.currentUserSubject.next({ username, role });
+        this.currentUserState.set({ username, role });
       }
     }
   }
@@ -51,16 +51,14 @@ export class AuthService {
         localStorage.setItem('username', response.username);
         localStorage.setItem('role', response.role);
 
-        const user: User = { username: response.username, role: response.role };
-        this.currentUserSubject.next(user);
+        this.currentUserState.set({ username: response.username, role: response.role });
       })
     );
   }
 
   register(credentials: {username: string, password: string}): Observable<LoginResponse> {
     return this.http.post<RegisterResponse>(`${this.baseUrl}/auth/register`, credentials).pipe(
-      switchMap(registerResponse => {
-        console.log('Registration successful:', registerResponse);
+      switchMap(() => {
         return this.login(credentials);
       })
     );
@@ -70,7 +68,7 @@ export class AuthService {
     localStorage.removeItem('bearerToken');
     localStorage.removeItem('username');
     localStorage.removeItem('role');
-    this.currentUserSubject.next(null);
+    this.currentUserState.set(null);
   }
 
   isLoggedIn(): boolean {
