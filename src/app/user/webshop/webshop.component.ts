@@ -9,11 +9,11 @@ import {
 } from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {Product, ProductService} from '../service/product.service';
+import {Product, ProductService} from '../../service/product.service';
 import {CurrencyPipe, NgOptimizedImage} from '@angular/common';
 import {MatButton} from '@angular/material/button';
 import {finalize} from 'rxjs';
-import {CartService} from '../service/cart.service';
+import {CartService} from '../../service/cart.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatDivider} from '@angular/material/divider';
 

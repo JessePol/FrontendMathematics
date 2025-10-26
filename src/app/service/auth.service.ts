@@ -1,4 +1,4 @@
-import {Injectable, Signal, signal} from '@angular/core';
+import {computed, Injectable, Signal, signal} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Observable, switchMap} from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -6,18 +6,18 @@ import {environment} from '../../environments/environment';
 
 export interface User {
   username: string;
-  role: string;
+  userRole: string;
 }
 
 export interface LoginResponse {
   token: string;
   username: string;
-  role: string;
+  userRole: string;
 }
 
 export interface RegisterResponse {
   username: string;
-  role: string;
+  userRole: string;
 }
 
 @Injectable({
@@ -29,6 +29,8 @@ export class AuthService {
   private currentUserState = signal<User | null>(null);
   public currentUser: Signal<User | null> = this.currentUserState.asReadonly();
 
+  public isAdmin = computed(() => this.currentUser()?.userRole === 'ROLE_ADMIN');
+
   constructor(private http: HttpClient) {
     this.loadInitialUser();
   }
@@ -37,9 +39,9 @@ export class AuthService {
     const token = this.getToken();
     if (token) {
       const username = localStorage.getItem('username');
-      const role = localStorage.getItem('role');
-      if (username && role) {
-        this.currentUserState.set({ username, role });
+      const userRole = localStorage.getItem('userRole');
+      if (username && userRole) {
+        this.currentUserState.set({ username, userRole });
       }
     }
   }
@@ -49,9 +51,25 @@ export class AuthService {
       tap(response => {
         localStorage.setItem('bearerToken', response.token);
         localStorage.setItem('username', response.username);
-        localStorage.setItem('role', response.role);
+        localStorage.setItem('userRole', response.userRole);
 
-        this.currentUserState.set({ username: response.username, role: response.role });
+        this.currentUserState.set({ username: response.username, userRole: response.userRole });
+      })
+    );
+  }
+
+  loginAdmin(credentials: {username: string, password: string}): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.baseUrl}/auth/login`, credentials).pipe(
+      tap(response => {
+        if (response.userRole !== 'ROLE_ADMIN') {
+          throw new Error('User is not an administrator.');
+        }
+
+        localStorage.setItem('bearerToken', response.token);
+        localStorage.setItem('username', response.username);
+        localStorage.setItem('userRole', response.userRole);
+
+        this.currentUserState.set({ username: response.username, userRole: response.userRole });
       })
     );
   }
@@ -67,7 +85,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('bearerToken');
     localStorage.removeItem('username');
-    localStorage.removeItem('role');
+    localStorage.removeItem('userRole');
     this.currentUserState.set(null);
   }
 

@@ -11,6 +11,8 @@ export interface Product {
   description: string;
 }
 
+export type NewProduct = Omit<Product, 'id'>;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -21,5 +23,17 @@ export class ProductService {
 
   getProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.baseUrl}/products`);
+  }
+
+  addProduct(productData: NewProduct): Observable<Product> {
+    return this.http.post<Product>(`${this.baseUrl}/products`, productData);
+  }
+
+  updateProduct(product: Product): Observable<Product> {
+    return this.http.put<Product>(`${this.baseUrl}/products/${product.id}`, product);
+  }
+
+  deleteProduct(productId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/products/${productId}`);
   }
 }

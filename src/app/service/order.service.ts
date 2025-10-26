@@ -7,7 +7,7 @@ import {catchError} from 'rxjs/operators';
 export interface OrderUser {
   id: number;
   username: string;
-  role: string;
+  userRole: string;
 }
 
 export interface OrderItem {

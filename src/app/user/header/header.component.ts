@@ -3,16 +3,16 @@ import {MatToolbar} from '@angular/material/toolbar';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 import {MatAnchor, MatButton, MatIconButton} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
-import {AuthService} from '../service/auth.service';
-import {LoginBoxComponent} from '../components/login-box/login-box.component';
+import {AuthService} from '../../service/auth.service';
+import {LoginBoxComponent} from '../../components/login-box/login-box.component';
 import {MatIcon} from '@angular/material/icon';
 import {CurrencyPipe} from '@angular/common';
 import {MatMenu, MatMenuTrigger} from '@angular/material/menu';
 import {MatBadge} from '@angular/material/badge';
 import {MatDivider} from '@angular/material/divider';
-import {CartService} from '../service/cart.service';
+import {CartService} from '../../service/cart.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {CheckoutDialogComponent} from '../components/checkout-box/checkout-box.component';
+import {CheckoutDialogComponent} from '../../components/checkout-box/checkout-box.component';
 
 @Component({
   selector: 'app-header',
