@@ -98,7 +98,9 @@
     </div>
 
     <div class="cart-actions">
-      <button mat-flat-button color="primary">Go to Checkout</button>
+      <button mat-flat-button color="primary" (click)="openCheckoutDialog()">
+        Go to Checkout
+      </button>
     </div>
 
   } @else {

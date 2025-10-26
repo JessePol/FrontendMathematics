@@ -1,8 +1,8 @@
 import {Component, effect, inject} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {HeaderComponent} from './header/header.component';
-import {AuthService} from './auth.service';
-import {CartService} from './cart.service';
+import {AuthService} from './service/auth.service';
+import {CartService} from './service/cart.service';
 
 @Component({
   selector: 'app-root',

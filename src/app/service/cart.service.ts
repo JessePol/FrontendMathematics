@@ -2,7 +2,7 @@ import {computed, Injectable, Signal, signal, WritableSignal} from '@angular/cor
 import {HttpClient} from '@angular/common/http';
 import {catchError, tap} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
-import {environment} from '../environments/environment';
+import {environment} from '../../environments/environment';
 
 export interface CartItem {
   productId: number;

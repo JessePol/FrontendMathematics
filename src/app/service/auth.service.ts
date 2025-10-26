@@ -2,7 +2,7 @@ import {Injectable, Signal, signal} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Observable, switchMap} from 'rxjs';
 import { tap } from 'rxjs/operators';
-import {environment} from '../environments/environment';
+import {environment} from '../../environments/environment';
 
 export interface User {
   username: string;

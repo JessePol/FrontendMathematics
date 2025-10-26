@@ -1,7 +1,7 @@
 import {HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {inject} from '@angular/core';
-import {AuthService} from '../auth.service';
+import {AuthService} from '../service/auth.service';
 import {environment} from '../../environments/environment';
 
 export const authTokenInterceptor: HttpInterceptorFn = (
