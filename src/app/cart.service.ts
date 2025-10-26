@@ -63,6 +63,39 @@ export class CartService {
     );
   }
 
+  removeItem(productId: number): Observable<Cart> {
+    return this.http.delete<Cart>(`${this.baseUrl}/cart/items/${productId}`).pipe(
+      tap(updatedCart => this.cartState.set(updatedCart)),
+      catchError(err => {
+        console.error(`Failed to remove item ${productId} from cart`, err);
+        throw err;
+      })
+    );
+  }
+
+  updateItemQuantity(productId: number, quantity: number): Observable<Cart> {
+    const payload = { quantity };
+    return this.http.put<Cart>(`${this.baseUrl}/cart/items/${productId}`, payload).pipe(
+      tap(updatedCart => this.cartState.set(updatedCart)),
+      catchError(err => {
+        console.error(`Failed to update quantity for item ${productId}`, err);
+        throw err;
+      })
+    );
+  }
+
+  emptyCart(): Observable<Cart | null> {
+    return this.http.delete<Cart | null>(`${this.baseUrl}/cart`).pipe(
+      tap(response => {
+        this.cartState.set(response ?? null);
+      }),
+      catchError(err => {
+        console.error('Failed to empty the cart', err);
+        throw err;
+      })
+    );
+  }
+
   clearCart(): void {
     this.cartState.set(null);
   }

@@ -52,6 +52,12 @@
 <mat-menu #cartMenu="matMenu" class="cart-menu">
   <div class="cart-menu-header">
     <h3>Your Cart</h3>
+    <button mat-icon-button color="warn"
+            aria-label="Empty your shopping cart"
+            title="Empty cart"
+            (click)="clearCart(); $event.stopPropagation();">
+      <mat-icon>delete_sweep</mat-icon>
+    </button>
   </div>
   <mat-divider></mat-divider>
 
@@ -59,11 +65,29 @@
     <div class="cart-items-container">
       @for (item of cartService.cartItems(); track item.productId) {
         <div class="cart-item">
-          <span class="item-name">{{ item.productName }}</span>
-          <span class="item-details">
-            {{ item.quantity }} x {{ item.unitPrice | currency:'EUR' }}
-          </span>
-          <span class="item-total">{{ item.itemTotal | currency:'EUR' }}</span>
+
+          <div class="item-info">
+            <span class="item-name">{{ item.productName }}</span>
+            <div class="item-details">
+              <input #qtyInput
+                     class="quantity-input"
+                     type="number"
+                     min="0"
+                     [value]="item.quantity"
+                     (change)="updateQuantity(item.productId, +qtyInput.value)"
+                     (click)="$event.stopPropagation()">
+              <span>x {{ item.unitPrice | currency:'EUR' }}</span>
+            </div>
+          </div>
+
+          <div class="item-actions">
+            <span class="item-total">{{ item.itemTotal | currency:'EUR' }}</span>
+            <button mat-icon-button color="warn"
+                    (click)="removeItemFromCart(item.productId); $event.stopPropagation();">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+
         </div>
       }
     </div>
@@ -72,9 +96,11 @@
       <strong>Total:</strong>
       <strong>{{ cartService.totalPrice() | currency:'EUR' }}</strong>
     </div>
+
     <div class="cart-actions">
       <button mat-flat-button color="primary">Go to Checkout</button>
     </div>
+
   } @else {
     <div class="empty-cart-message">
       <p>Your cart is empty.</p>
