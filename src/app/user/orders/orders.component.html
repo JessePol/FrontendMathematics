@@ -32,14 +32,10 @@
                   <strong>{{ order.totalPrice | currency:'EUR' }}</strong>
                 </mat-panel-description>
               </mat-expansion-panel-header>
-
-
-
               <mat-list>
                 @for (item of order.orderItems; track item.id) {
                   <mat-list-item>
                     <span matListItemTitle>{{ item.productName }}</span>
-
                     <div matListItemLine class="order-item-details-line">
                       <span>{{ item.quantity }} x {{ item.priceAtPurchase | currency:'EUR' }}</span>
                       <span class="item-line-total">{{ item.totalPrice | currency:'EUR' }}</span>
@@ -47,11 +43,6 @@
                   </mat-list-item>
                 }
               </mat-list>
-
-
-
-
-
             </mat-expansion-panel>
           }
         </mat-accordion>

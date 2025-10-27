@@ -28,6 +28,8 @@ export interface Order {
   orderItems: OrderItem[];
 }
 
+export type OrderStatus = 'PENDING' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -59,6 +61,16 @@ export class OrderService {
       catchError(err => {
         console.error('Failed to fetch orders', err);
         return throwError(() => new Error('Could not retrieve your orders.'));
+      })
+    );
+  }
+
+  updateOrderStatus(orderId: number, status: OrderStatus): Observable<Order> {
+    const body = { status: status };
+    return this.http.put<Order>(`${this.baseUrl}/orders/${orderId}/status`, body).pipe(
+      catchError(err => {
+        console.error('Failed to update order status', err);
+        return throwError(() => new Error('Could not update the order status.'));
       })
     );
   }

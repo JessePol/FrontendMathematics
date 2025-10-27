@@ -88,6 +88,46 @@ mat-panel-description {
   font-weight: 500;
 }
 
+.user-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #555;
+}
+
+.order-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 24px 16px 24px;
+}
+
+.mat-mdc-chip {
+  &.status-pending {
+    background-color: #ffc107; // Amber
+    color: #000;
+  }
+
+  &.status-processing {
+    background-color: #2196f3; // Blue
+    color: #fff;
+  }
+
+  &.status-shipped {
+    background-color: #4caf50; // Green
+    color: #fff;
+  }
+
+  &.status-delivered {
+    background-color: #8bc34a; // Light Green
+    color: #000;
+  }
+
+  &.status-cancelled {
+    background-color: #f44336; // Red
+    color: #fff;
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
