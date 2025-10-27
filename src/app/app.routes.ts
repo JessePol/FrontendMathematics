@@ -8,6 +8,7 @@ import {AdminProductsComponent} from './admin/admin-products/admin-products.comp
 import {UserLayoutComponent} from './user/user-layout/user-layout.component';
 import {AdminLayoutComponent} from './admin/admin-layout/admin-layout.component';
 import {AdminOrdersComponent} from './admin/admin-orders/admin-orders.component';
+import {AdminUsersComponent} from './admin/admin-users/admin-users.component';
 
 export const routes: Routes = [
   {
@@ -36,6 +37,7 @@ export const routes: Routes = [
           { path: '', redirectTo: 'products', pathMatch: 'full' },
           { path: 'products', component: AdminProductsComponent },
           { path: 'orders', component: AdminOrdersComponent },
+          { path: 'users', component: AdminUsersComponent },
         ]
       }
     ]
