@@ -1,0 +1,116 @@
+<mat-toolbar>
+  <div class="header-content">
+    <!-- Left side -->
+    <div class="left-section">
+      <span class="title" routerLink="/">Mathematics Inc</span>
+    </div>
+
+    <!-- Middle section -->
+    <div class="middle-section">
+      <nav>
+        <a mat-button routerLink="/webshop" routerLinkActive="active-link">Webshop</a>
+        @if (authService.currentUser()) {
+          <a mat-button routerLink="/orders" routerLinkActive="active-link">My Orders</a>
+        } @else {
+          <a mat-button disabled title="Login to view your orders">My Orders</a>
+        }
+        <a mat-button routerLink="/about" routerLinkActive="active-link">About</a>
+      </nav>
+    </div>
+
+    <!-- Right section -->
+    <div class="right-section">
+
+      @if (authService.currentUser(); as user) {
+
+        <button mat-icon-button
+                aria-label="Open shopping cart"
+                title="Shopping cart"
+                [matMenuTriggerFor]="cartMenu">
+          <mat-icon [matBadge]="cartService.totalItems()"
+                    [matBadgeHidden]="cartService.totalItems() === 0"
+                    matBadgeColor="warn">
+            shopping_cart
+          </mat-icon>
+        </button>
+
+        <button mat-button (click)="logout()" aria-label="Logout" title="Logout">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      } @else {
+        <button mat-icon-button disabled aria-label="Login to view shopping cart" title="Login to view shopping cart">
+          <mat-icon>shopping_cart</mat-icon>
+        </button>
+
+        <button mat-flat-button color="primary" (click)="openLoginBox()">
+          <mat-icon>login</mat-icon>
+          <span>Login</span>
+        </button>
+      }
+
+    </div>
+  </div>
+</mat-toolbar>
+
+<!-- Shopping Cart Dropdown Menu -->
+<mat-menu #cartMenu="matMenu" class="cart-menu">
+  <div class="cart-menu-header">
+    <h3>Your Cart</h3>
+    <button mat-icon-button color="warn"
+            aria-label="Empty your shopping cart"
+            title="Empty cart"
+            (click)="clearCart(); $event.stopPropagation();">
+      <mat-icon>delete_sweep</mat-icon>
+    </button>
+  </div>
+  <mat-divider></mat-divider>
+
+  @if (cartService.totalItems() > 0) {
+    <div class="cart-items-container">
+      @for (item of cartService.cartItems(); track item.productId) {
+        <div class="cart-item">
+
+          <div class="item-info">
+            <span class="item-name">{{ item.productName }}</span>
+            <div class="item-details">
+              <input #qtyInput
+                     class="quantity-input"
+                     type="number"
+                     min="0"
+                     [value]="item.quantity"
+                     (change)="updateQuantity(item.productId, +qtyInput.value)"
+                     (click)="$event.stopPropagation()">
+              <span>x {{ item.unitPrice | currency:'EUR' }}</span>
+            </div>
+          </div>
+
+          <div class="item-actions">
+            <span class="item-total">{{ item.itemTotal | currency:'EUR' }}</span>
+            <button mat-icon-button color="warn"
+                    (click)="removeItemFromCart(item.productId); $event.stopPropagation();">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+
+        </div>
+      }
+    </div>
+    <mat-divider></mat-divider>
+    <div class="cart-total">
+      <strong>Total:</strong>
+      <strong>{{ cartService.totalPrice() | currency:'EUR' }}</strong>
+    </div>
+
+    <div class="cart-actions">
+      <button mat-flat-button color="primary" (click)="openCheckoutDialog()">
+        Go to Checkout
+      </button>
+    </div>
+
+  } @else {
+    <div class="empty-cart-message">
+      <p>Your cart is empty.</p>
+    </div>
+  }
+</mat-menu>

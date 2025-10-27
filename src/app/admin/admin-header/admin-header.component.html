@@ -1,0 +1,19 @@
+<mat-toolbar color="primary">
+  <!-- Left side: Title -->
+  <span class="title" routerLink="/admin/dashboard">Admin Panel</span>
+
+  <!-- Middle section: Navigation -->
+  <nav class="admin-nav">
+    <a mat-button routerLink="/_admin/products" routerLinkActive="active-link">Products</a>
+    <a mat-button routerLink="/_admin/orders" routerLinkActive="active-link">Orders</a>
+    <a mat-button routerLink="/_admin/users" routerLinkActive="active-link">Users</a>
+  </nav>
+
+  <div class="spacer"></div>
+
+  <!-- Right section: Logout -->
+  <button mat-button (click)="logout()" aria-label="Logout" title="Logout">
+    <mat-icon>logout</mat-icon>
+    <span>Logout</span>
+  </button>
+</mat-toolbar>

@@ -1,0 +1,72 @@
+<div class="admin-container">
+
+  <mat-card class="page-header-card" appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>User Management</mat-card-title>
+      <mat-card-subtitle>View, manage roles, and delete system users.</mat-card-subtitle>
+    </mat-card-header>
+  </mat-card>
+
+  @if (isLoading()) {
+    <div class="status-container">
+      <mat-spinner></mat-spinner>
+      <p>Loading users...</p>
+    </div>
+  } @else if (error()) {
+    <div class="status-container error-state">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error() }}</p>
+      <button mat-flat-button color="primary" (click)="loadUsers()">Retry</button>
+    </div>
+  } @else {
+    <div class="table-container mat-elevation-z8">
+      <table mat-table [dataSource]="users()">
+
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>ID</th>
+          <td mat-cell *matCellDef="let user">{{ user.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef>Username</th>
+          <td mat-cell *matCellDef="let user">{{ user.username }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="userRole">
+          <th mat-header-cell *matHeaderCellDef>Role</th>
+          <td mat-cell *matCellDef="let user">
+            <mat-form-field appearance="outline" class="role-select-field">
+              <mat-label>Role</mat-label>
+              <mat-select
+                [value]="user.userRole"
+                (selectionChange)="onUpdateRole(user, $event.value)">
+                @for (role of availableRoles; track role) {
+                  <mat-option [value]="role">{{ role.replace('ROLE_', '') }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let user">
+            <button mat-icon-button color="warn" title="Delete User" (click)="onDeleteUser(user.id, user.username)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
+    @if (!users().length) {
+      <div class="status-container">
+        <mat-icon>info</mat-icon>
+        <p>No users found in the system.</p>
+      </div>
+    }
+  }
+</div>

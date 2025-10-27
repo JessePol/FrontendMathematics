@@ -1,0 +1,64 @@
+@if (order(); as createdOrder) {
+  <h2 mat-dialog-title class="success-title">
+    <mat-icon color="primary">check_circle</mat-icon>
+    <span>Order Placed Successfully!</span>
+  </h2>
+  <mat-dialog-content class="mat-typography">
+    <p>Thank you for your purchase. Here is a summary of your order:</p>
+    <div class="order-summary">
+      <p><strong>Order ID:</strong> #{{ createdOrder.id }}</p>
+      <p><strong>Order Date:</strong> {{ createdOrder.orderDate | date:'medium' }}</p>
+    </div>
+    <mat-divider></mat-divider>
+    <mat-list>
+      @for (item of createdOrder.orderItems; track item.id) {
+        <mat-list-item>
+          <span matListItemTitle>{{ item.productName }}</span>
+          <span matListItemLine>{{ item.quantity }} x {{ item.priceAtPurchase | currency:'EUR' }}</span>
+          <span class="item-total-summary">{{ item.totalPrice | currency:'EUR' }}</span>
+        </mat-list-item>
+      }
+    </mat-list>
+    <mat-divider></mat-divider>
+    <div class="confirmation-total">
+      <span>Total Price:</span>
+      <strong>{{ createdOrder.totalPrice | currency:'EUR' }}</strong>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-flat-button color="primary" (click)="closeDialog()">Close</button>
+  </mat-dialog-actions>
+
+} @else if (error()) {
+  <h2 mat-dialog-title class="error-title">
+    <mat-icon color="warn">error</mat-icon>
+    <span>Order Failed</span>
+  </h2>
+  <mat-dialog-content>
+    <p>We're sorry, but we could not process your order at this time.</p>
+    <p class="error-message"><strong>Reason:</strong> {{ error() }}</p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-flat-button color="primary" (click)="closeDialog()">Close</button>
+  </mat-dialog-actions>
+
+} @else {
+  <h2 mat-dialog-title>Confirm Your Purchase</h2>
+  <mat-dialog-content class="mat-typography">
+    <p>Please review your cart total below. Are you sure you want to place this order?</p>
+    <div class="confirmation-total">
+      <span>Total:</span>
+      <strong>{{ cartService.totalPrice() | currency:'EUR' }}</strong>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-flat-button color="primary" (click)="confirmPurchase()" [disabled]="isLoading()">
+      @if (isLoading()) {
+        <mat-spinner diameter="24"></mat-spinner>
+      } @else {
+        Confirm & Purchase
+      }
+    </button>
+  </mat-dialog-actions>
+}
